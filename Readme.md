@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вадим Бондаренко](https://up.htmlacademy.ru/javascript/21/user/1580543).
-* Наставник: `Неизвестно`.
+* Наставник: [Владислав Ермолин](https://htmlacademy.ru/profile/id123103).
 
 ---
 
