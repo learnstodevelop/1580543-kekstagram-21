@@ -9,13 +9,28 @@ const FIRST_AVATAR = 1;
 const LAST_AVATAR = 6;
 const MAX_OFFERS = 2;
 
-const NAMES = ['Иван', 'Антон', 'Кристина', 'Мария', 'Ашот', 'Людмила',
-  'Владислав', 'Вадим', 'Аня', 'Михаил', 'КЕКС', 'Енот'];
-const textComments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.',
+const NAMES = [
+  'Иван',
+  'Антон',
+  'Кристина',
+  'Мария',
+  'Ашот',
+  'Людмила',
+  'Владислав',
+  'Вадим',
+  'Аня',
+  'Михаил',
+  'КЕКС',
+  'Енот'
+];
+const textComments = [
+  'Всё отлично!',
+  'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+];
 
 const picturesListElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture')
@@ -25,7 +40,7 @@ const fragment = document.createDocumentFragment();
 
 const getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
 const getRandomElement = function (arr) {
   const randomElement = arr[Math.floor(Math.random() * arr.length)];
@@ -73,7 +88,7 @@ const renderPost = function (post) {
   postElement.querySelector('.picture__comments').textContent = post.comments;
 
   return postElement;
-}
+};
 
 const renderPosts = function () {
   for (let i = 0; i < getPosts().length; i++) {
