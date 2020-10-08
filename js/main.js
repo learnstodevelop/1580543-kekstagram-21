@@ -9,10 +9,10 @@
   const FIRST_AVATAR = 1;
   const LAST_AVATAR = 6;
   const MAX_SENTENCES = 2;
-  const MIN_HASHTAG_LENGTH = 2;
   const MAX_HASHTAG_LENGTH = 20;
   const DEFAULT_EFFECT_DEPTH = 91;
   const DEFAULT_EFFECT_LEVEL = 453;
+  const MAX_HASHTAGS = 5;
 
   const closePopupButton = document.querySelector('.img-upload__cancel');
   const modal = document.querySelector('.img-upload__overlay');
@@ -24,6 +24,7 @@
   const effectDepth = document.querySelector('.effect-level__depth');
   const hashtagsInput = document.querySelector('.text__hashtags');
   const effectList = document.querySelector('.effects__list');
+  const form = document.querySelector('.img-upload__form');
 
   const NAMES = [
     'Иван',
@@ -112,10 +113,47 @@
     picturesListElement.appendChild(fragment);
   };
 
-  renderPosts();
+  const onPopupEscPress = function (evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      closePopup();
+    }
+  };
 
-  modal.classList.remove('hidden');
-  body.classList.add('modal-open');
+  const openPopup = function () {
+    modal.classList.remove('hidden');
+    body.classList.add('modal-open');
+
+    effectList.addEventListener('change', effectDefaultHandler);
+
+    closePopupButton.addEventListener('click', function () {
+      closePopup();
+    });
+
+    document.addEventListener('keydown', onPopupEscPress);
+
+    effectPin.addEventListener('mouseup', function () {
+      effectInputValue.setAttribute('value', getEffectValue(effectLine, effectDepth));
+    });
+
+    hashtagsInput.addEventListener('input', function () {
+      validateHashtags();
+    });
+
+    hashtagsInput.addEventListener('focus', function () {
+      document.removeEventListener('keydown', onPopupEscPress);
+    });
+
+    hashtagsInput.addEventListener('blur', function () {
+      document.addEventListener('keydown', onPopupEscPress);
+    });
+
+    form.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+      validateHashtags();
+      form.submit();
+    });
+  };
 
   const closePopup = function () {
     modal.classList.add('hidden');
@@ -157,12 +195,15 @@
       const hashtagEl = hashtag.split('');
       const hashtagLength = hashtagEl.length;
 
-      if (re.test(hashtag) === false) {
-        hashtagsInput.setCustomValidity('Введите #ХешТег (должен состоять из букв и чисел и не может содержать пробелы и спецсимволы (@, $ и т. п.))');
-      } else if (hashtagLength < MIN_HASHTAG_LENGTH) {
-        hashtagsInput.setCustomValidity('Ещё ' + (MIN_HASHTAG_LENGTH - hashtagLength) + ' симв.');
+
+      if (hashtagEl[0] !== '#' && hashtag.length !== 0) {
+        hashtagsInput.setCustomValidity('#ХешТег должен начинатся с #');
+      } else if (re.test(hashtag) === false && hashtag.length !== 0) {
+        hashtagsInput.setCustomValidity('#ХешТег должен состоять из букв и чисел и не может содержать пробелы и спецсимволы (@, $ и т. п.))');
       } else if (hashtagLength > MAX_HASHTAG_LENGTH) {
         hashtagsInput.setCustomValidity('Удалите лишние ' + (hashtagLength - MAX_HASHTAG_LENGTH) + ' симв.');
+      } else if (hashtagsArr.length > MAX_HASHTAGS) {
+        hashtagsInput.setCustomValidity('Максимум 5 #ХешТегов');
       } else {
         hashtagsInput.setCustomValidity('');
       }
@@ -174,32 +215,17 @@
     return Math.floor(defaultDepth * 100 / defaultLine);
   };
 
-
   const effectDefaultHandler = function (evt) {
     if (evt.target && evt.target.matches('input[name="effect"]')) {
       effectInputValue.setAttribute('value', getDefaultState(DEFAULT_EFFECT_DEPTH, DEFAULT_EFFECT_LEVEL));
     }
   };
 
-  effectList.addEventListener('change', effectDefaultHandler);
 
-  closePopupButton.addEventListener('click', function () {
-    closePopup();
-  });
+  renderPosts();
 
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      closePopup();
-    }
-  });
-
-  effectPin.addEventListener('mouseup', function () {
-    effectInputValue.setAttribute('value', getEffectValue(effectLine, effectDepth));
-  });
-
-  hashtagsInput.addEventListener('input', function () {
-    validateHashtags();
+  uploadFileInput.addEventListener('change', function () {
+    openPopup();
   });
 })();
 
