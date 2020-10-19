@@ -125,6 +125,11 @@
     }
   };
 
+  const getEffectValue = function (line, effectLevel) {
+    return Math.floor(effectLevel.offsetWidth * 100 / line.offsetWidth);
+  };
+
+  //открытие попапа
   const openPopup = function () {
     modal.classList.remove(`hidden`);
     body.classList.add(`modal-open`);
@@ -165,6 +170,7 @@
     scaleControl.addEventListener(`click`, scaleChangeHandler);
   };
 
+  //закрытие попапа
   const closePopup = function () {
     modal.classList.add(`hidden`);
     body.classList.remove(`modal-open`);
@@ -210,10 +216,7 @@
     scaleControl.removeEventListener(`click`, scaleChangeHandler);
   };
 
-  const getEffectValue = function (line, effectLevel) {
-    return Math.floor(effectLevel.offsetWidth * 100 / line.offsetWidth);
-  };
-
+  //Валидация хештегов
   const validateHashtags = function () {
     const hashtagsArr = hashtagsInput.value.split(` `);
     const re = /^#[0-9A-Za-zА-Яа-яё]*$/;
@@ -242,6 +245,7 @@
     hashtagsInput.reportValidity();
   };
 
+  //работа с превью
   const filterChangeHandler = function (evt) {
     if (evt.target && evt.target.matches(`input[id="effect-none"]`)) {
       imgPreview.className = ``;
@@ -315,7 +319,7 @@
     }
   };
 
-
+  //процессы
   renderPosts();
 
   uploadFileInput.addEventListener(`change`, function () {
