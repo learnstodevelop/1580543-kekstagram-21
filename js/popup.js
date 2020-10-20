@@ -1,22 +1,32 @@
 'use strict';
 
 (function () {
+  const closePopupButton = document.querySelector(`.img-upload__cancel`);
+  const modal = document.querySelector(`.img-upload__overlay`);
+  const body = document.querySelector(`body`);
+  const effectPin = document.querySelector(`.effect-level__pin`);
+  const effectLine = document.querySelector(`.effect-level__line`);
+  const effectDepth = document.querySelector(`.effect-level__depth`);
+  const form = document.querySelector(`.img-upload__form`);
+  const effects = document.querySelector(`.effects__list`);
+  const scaleControl = document.querySelector(`.scale`);
+
   window.popup = {
     openEvent: function () {
-      window.variables.modal.classList.remove(`hidden`);
-      window.variables.body.classList.add(`modal-open`);
+      modal.classList.remove(`hidden`);
+      body.classList.add(`modal-open`);
       window.variables.effectSlider.classList.add(`hidden`);
 
       window.variables.effectList.addEventListener(`change`, window.previewEditor.effectDefaultHandler);
 
-      window.variables.closePopupButton.addEventListener(`click`, function () {
+      closePopupButton.addEventListener(`click`, function () {
         window.popup.closeEvent();
       });
 
       document.addEventListener(`keydown`, window.popup.onPopupEscPress);
 
-      window.variables.effectPin.addEventListener(`mouseup`, function () {
-        window.variables.effectInputValue.setAttribute(`value`, window.previewEditor.getEffectValue(window.variables.effectLine, window.variables.effectDepth));
+      effectPin.addEventListener(`mouseup`, function () {
+        window.variables.effectInputValue.setAttribute(`value`, window.previewEditor.getEffectValue(effectLine, effectDepth));
       });
 
       window.variables.hashtagsInput.addEventListener(`input`, function () {
@@ -31,31 +41,31 @@
         document.addEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 
-      window.variables.effects.addEventListener(`change`, window.previewEditor.filterChangeHandler);
+      effects.addEventListener(`change`, window.previewEditor.filterChangeHandler);
 
-      window.variables.form.addEventListener(`submit`, function (evt) {
+      form.addEventListener(`submit`, function (evt) {
         evt.preventDefault();
         window.validateHashtags();
-        window.variables.form.submit();
+        form.submit();
       });
 
-      window.variables.scaleControl.addEventListener(`click`, window.previewEditor.scaleChangeHandler);
+      scaleControl.addEventListener(`click`, window.previewEditor.scaleChangeHandler);
     },
     closeEvent: function () {
-      window.variables.modal.classList.add(`hidden`);
-      window.variables.body.classList.remove(`modal-open`);
+      modal.classList.add(`hidden`);
+      body.classList.remove(`modal-open`);
       window.variables.uploadFileInput.value = ``;
 
       window.variables.effectList.removeEventListener(`change`, window.previewEditor.effectDefaultHandler);
 
-      window.variables.closePopupButton.removeEventListener(`click`, function () {
+      closePopupButton.removeEventListener(`click`, function () {
         window.popup.closeEvent();
       });
 
       document.removeEventListener(`keydown`, window.popup.onPopupEscPress);
 
-      window.variables.effectPin.removeEventListener(`mouseup`, function () {
-        window.variables.effectInputValue.value = window.previewEditor.getEffectValue(window.variables.effectLine, window.variables.effectDepth);
+      effectPin.removeEventListener(`mouseup`, function () {
+        window.variables.effectInputValue.value = window.previewEditor.getEffectValue(effectLine, effectDepth);
       });
 
       window.variables.hashtagsInput.removeEventListener(`input`, function () {
@@ -70,15 +80,15 @@
         document.addEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 
-      window.variables.effects.removeEventListener(`change`, window.previewEditor.filterChangeHandler);
+      effects.removeEventListener(`change`, window.previewEditor.filterChangeHandler);
 
-      window.variables.form.removeEventListener(`submit`, function (evt) {
+      form.removeEventListener(`submit`, function (evt) {
         evt.preventDefault();
         window.validateHashtags();
-        window.variables.form.submit();
+        form.submit();
       });
 
-      window.variables.scaleControl.removeEventListener(`click`, window.previewEditor.scaleChangeHandler);
+      scaleControl.removeEventListener(`click`, window.previewEditor.scaleChangeHandler);
     },
     onPopupEscPress: function (evt) {
       if (evt.key === `Escape`) {
