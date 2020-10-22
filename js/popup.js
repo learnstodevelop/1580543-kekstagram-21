@@ -10,73 +10,80 @@
   const form = document.querySelector(`.img-upload__form`);
   const effects = document.querySelector(`.effects__list`);
   const scaleControl = document.querySelector(`.scale`);
+  const uploadFileInput = document.querySelector(`#upload-file`);
+  const effectInputValue = document.querySelector(`.effect-level__value`);
+  const hashtagsInput = document.querySelector(`.text__hashtags`);
+  const effectList = document.querySelector(`.effects__list`);
+  const effectSlider = document.querySelector(`.img-upload__effect-level`);
 
   window.popup = {
-    openEvent: function () {
+    open: function () {
       modal.classList.remove(`hidden`);
       body.classList.add(`modal-open`);
-      window.variables.effectSlider.classList.add(`hidden`);
+      effectSlider.classList.add(`hidden`);
 
-      window.variables.effectList.addEventListener(`change`, window.previewEditor.effectDefaultHandler);
+      effectList.addEventListener(`change`, window.previewEditor.effectDefaultHandler);
 
       closePopupButton.addEventListener(`click`, function () {
-        window.popup.closeEvent();
+        window.popup.close();
       });
 
       document.addEventListener(`keydown`, window.popup.onPopupEscPress);
 
       effectPin.addEventListener(`mouseup`, function () {
-        window.variables.effectInputValue.setAttribute(`value`, window.previewEditor.getEffectValue(effectLine, effectDepth));
+        effectInputValue.setAttribute(`value`, window.previewEditor.getEffectValue(effectLine, effectDepth));
       });
 
-      window.variables.hashtagsInput.addEventListener(`input`, function () {
+      hashtagsInput.addEventListener(`input`, function () {
         window.validateHashtags();
       });
 
-      window.variables.hashtagsInput.addEventListener(`focus`, function () {
+      hashtagsInput.addEventListener(`focus`, function () {
         document.removeEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 
-      window.variables.hashtagsInput.addEventListener(`blur`, function () {
+      hashtagsInput.addEventListener(`blur`, function () {
         document.addEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 
       effects.addEventListener(`change`, window.previewEditor.filterChangeHandler);
 
       form.addEventListener(`submit`, function (evt) {
-        evt.preventDefault();
         window.validateHashtags();
-        form.submit();
+        window.upload(new FormData(form), function () {
+          window.popup.close();
+        });
+        evt.preventDefault();
       });
 
       scaleControl.addEventListener(`click`, window.previewEditor.scaleChangeHandler);
     },
-    closeEvent: function () {
+    close: function () {
       modal.classList.add(`hidden`);
       body.classList.remove(`modal-open`);
-      window.variables.uploadFileInput.value = ``;
+      uploadFileInput.value = ``;
 
-      window.variables.effectList.removeEventListener(`change`, window.previewEditor.effectDefaultHandler);
+      effectList.removeEventListener(`change`, window.previewEditor.effectDefaultHandler);
 
       closePopupButton.removeEventListener(`click`, function () {
-        window.popup.closeEvent();
+        window.popup.close();
       });
 
       document.removeEventListener(`keydown`, window.popup.onPopupEscPress);
 
       effectPin.removeEventListener(`mouseup`, function () {
-        window.variables.effectInputValue.value = window.previewEditor.getEffectValue(effectLine, effectDepth);
+        effectInputValue.value = window.previewEditor.getEffectValue(effectLine, effectDepth);
       });
 
-      window.variables.hashtagsInput.removeEventListener(`input`, function () {
+      hashtagsInput.removeEventListener(`input`, function () {
         window.validateHashtags();
       });
 
-      window.variables.hashtagsInput.removeEventListener(`focus`, function () {
+      hashtagsInput.removeEventListener(`focus`, function () {
         document.removeEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 
-      window.variables.hashtagsInput.removeEventListener(`blur`, function () {
+      hashtagsInput.removeEventListener(`blur`, function () {
         document.addEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 
@@ -93,7 +100,7 @@
     onPopupEscPress: function (evt) {
       if (evt.key === `Escape`) {
         evt.preventDefault();
-        window.popup.closeEvent();
+        window.popup.close();
       }
     }
   };

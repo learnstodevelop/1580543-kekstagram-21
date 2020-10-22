@@ -9,48 +9,51 @@
   const scaleValue = document.querySelector(`.scale__control--value`);
   const imgPreview = document.querySelector(`.img-upload__img`);
   const scaleValueNumber = scaleValue.value.split(`%`);
+  const effectInputValue = document.querySelector(`.effect-level__value`);
+  const effectList = document.querySelector(`.effects__list`);
+  const effectSlider = document.querySelector(`.img-upload__effect-level`);
 
   window.previewEditor = {
     filterChangeHandler: function (evt) {
       if (evt.target && evt.target.matches(`input[id="effect-none"]`)) {
         imgPreview.className = ``;
-        window.variables.effectSlider.classList.add(`hidden`);
+        effectSlider.classList.add(`hidden`);
       } else if (evt.target && evt.target.matches(`input[id="effect-none"]`)) {
         imgPreview.className = ``;
-        window.variables.effectSlider.classList.add(`hidden`);
+        effectSlider.classList.add(`hidden`);
       } else if (evt.target && evt.target.matches(`input[id="effect-chrome"]`)) {
         imgPreview.className = `effects__preview--chrome`;
-        window.variables.effectSlider.classList.remove(`hidden`);
+        effectSlider.classList.remove(`hidden`);
       } else if (evt.target && evt.target.matches(`input[id="effect-sepia"]`)) {
         imgPreview.className = `effects__preview--sepia`;
-        window.variables.effectSlider.classList.remove(`hidden`);
+        effectSlider.classList.remove(`hidden`);
       } else if (evt.target && evt.target.matches(`input[id="effect-marvin"]`)) {
         imgPreview.className = `effects__preview--marvin`;
-        window.variables.effectSlider.classList.remove(`hidden`);
+        effectSlider.classList.remove(`hidden`);
       } else if (evt.target && evt.target.matches(`input[id="effect-phobos"]`)) {
         imgPreview.className = `effects__preview--phobos`;
-        window.variables.effectSlider.classList.remove(`hidden`);
+        effectSlider.classList.remove(`hidden`);
       } else if (evt.target && evt.target.matches(`input[id="effect-heat"]`)) {
         imgPreview.className = `effects__preview--heat`;
-        window.variables.effectSlider.classList.remove(`hidden`);
+        effectSlider.classList.remove(`hidden`);
       }
     },
     effectDefaultHandler: function (evt) {
       if (evt.target && evt.target.matches(`input[name="effect"]`)) {
-        window.variables.effectInputValue.setAttribute(`value`, DEFAULT_LEVEL);
+        effectInputValue.setAttribute(`value`, DEFAULT_LEVEL);
 
-        if (window.variables.effectList.querySelector(`input[id="effect-none"]`).checked) {
+        if (effectList.querySelector(`input[id="effect-none"]`).checked) {
           imgPreview.style.filter = `none`;
-        } else if (window.variables.effectList.querySelector(`input[id="effect-chrome"]`).checked) {
-          imgPreview.style.filter = `grayscale(` + (window.variables.effectInputValue.value / 100) + `)`;
-        } else if (window.variables.effectList.querySelector(`input[id="effect-sepia"]`).checked) {
-          imgPreview.style.filter = `sepia(` + (window.variables.effectInputValue.value / 100) + `)`;
-        } else if (window.variables.effectList.querySelector(`input[id="effect-marvin"]`).checked) {
-          imgPreview.style.filter = `invert(` + (window.variables.effectInputValue.value) + `%)`;
-        } else if (window.variables.effectList.querySelector(`input[id="effect-phobos"]`).checked) {
-          imgPreview.style.filter = `blur(` + (window.variables.effectInputValue.value * 3 / 100) + `px)`;
-        } else if (window.variables.effectList.querySelector(`input[id="effect-heat"]`).checked) {
-          imgPreview.style.filter = `brightness(` + (1 + (window.variables.effectInputValue.value * 2 / 100)) + `)`;
+        } else if (effectList.querySelector(`input[id="effect-chrome"]`).checked) {
+          imgPreview.style.filter = `grayscale(` + (effectInputValue.value / 100) + `)`;
+        } else if (effectList.querySelector(`input[id="effect-sepia"]`).checked) {
+          imgPreview.style.filter = `sepia(` + (effectInputValue.value / 100) + `)`;
+        } else if (effectList.querySelector(`input[id="effect-marvin"]`).checked) {
+          imgPreview.style.filter = `invert(` + (effectInputValue.value) + `%)`;
+        } else if (effectList.querySelector(`input[id="effect-phobos"]`).checked) {
+          imgPreview.style.filter = `blur(` + (effectInputValue.value * 3 / 100) + `px)`;
+        } else if (effectList.querySelector(`input[id="effect-heat"]`).checked) {
+          imgPreview.style.filter = `brightness(` + (1 + (effectInputValue.value * 2 / 100)) + `)`;
         }
       }
     },
