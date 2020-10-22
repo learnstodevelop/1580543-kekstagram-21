@@ -10,6 +10,9 @@
   const MIN_LIKES = 15;
   const MAX_LIKES = 200;
 
+  const uploadFileInput = document.querySelector(`#upload-file`);
+  const uploadFileControl = document.querySelector(`.img-upload__control`);
+
   const NAMES = [
     `Иван`,
     `Антон`,
@@ -88,7 +91,7 @@
     return postElement;
   };
 
-  const renderPosts = function () {
+  const successHandler = function () {
     const picturesListElement = document.querySelector(`.pictures`);
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < getPosts().length; i++) {
@@ -97,15 +100,27 @@
     picturesListElement.appendChild(fragment);
   };
 
-  renderPosts();
+  const errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '18px';
 
-  window.variables.uploadFileInput.addEventListener(`change`, function () {
-    window.popup.openEvent();
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  window.load(successHandler, errorHandler);
+
+  uploadFileInput.addEventListener(`change`, function () {
+    window.popup.open();
   });
 
-  window.variables.uploadFileControl.addEventListener(`keydown`, function (evt) {
+  uploadFileControl.addEventListener(`keydown`, function (evt) {
     if (evt.key === `Enter`) {
-      window.variables.uploadFileControl.click();
+      uploadFileControl.click();
     }
   });
 })();
