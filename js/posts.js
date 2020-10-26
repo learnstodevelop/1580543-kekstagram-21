@@ -1,81 +1,10 @@
 'use strict';
 
 (function () {
-  const MIN_COMMENTS = 2;
-  const MAX_COMMENTS = 20;
-  const FIRST_AVATAR = 1;
-  const LAST_AVATAR = 6;
-  const MAX_SENTENCES = 2;
-  const TOTAL_PHOTOS = 25;
-  const MIN_LIKES = 15;
-  const MAX_LIKES = 200;
+  const MAX_RANDOM_POSTS = 10;
 
   const uploadFileInput = document.querySelector(`#upload-file`);
   const uploadFileControl = document.querySelector(`.img-upload__control`);
-
-  const NAMES = [
-    `Иван`,
-    `Антон`,
-    `Кристина`,
-    `Мария`,
-    `Ашот`,
-    `Людмила`,
-    `Владислав`,
-    `Вадим`,
-    `Аня`,
-    `Михаил`,
-    `КЕКС`,
-    `Енот`
-  ];
-  const TEXT_COMMENTS = [
-    `Всё отлично!`,
-    `В целом всё неплохо. Но не всё.`,
-    `Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.`,
-    `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`,
-    `Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.`,
-    `Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!`
-  ];
-
-  const getRandomNumber = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  const getRandomElement = function (arr) {
-    const randomElement = arr[getRandomNumber(0, arr.length - 1)];
-    return randomElement;
-  };
-
-  const getComment = function (number) {
-    if (getRandomNumber(0, number)) {
-      return getRandomElement(TEXT_COMMENTS);
-    }
-    return getRandomElement(TEXT_COMMENTS) + ` ` + getRandomElement(TEXT_COMMENTS);
-  };
-
-  const getComments = function () {
-    const comments = [];
-    for (let i = 0; i < getRandomNumber(MIN_COMMENTS, MAX_COMMENTS); i++) {
-      comments.push({
-        avatar: `img/avatar-` + getRandomNumber(FIRST_AVATAR, LAST_AVATAR) + `.svg`,
-        message: getComment(MAX_SENTENCES),
-        name: getRandomElement(NAMES)
-      });
-    }
-    return comments;
-  };
-
-  const getPosts = function () {
-    const posts = [];
-    for (let i = 0; i < TOTAL_PHOTOS; i++) {
-      posts.push({
-        url: `photos/` + (i + 1) + `.jpg`,
-        description: `Описание фотографии`,
-        likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
-        comments: getComments().length
-      });
-    }
-    return posts;
-  };
 
   const renderPost = function (post) {
     const pictureTemplate = document.querySelector(`#picture`)
@@ -86,21 +15,91 @@
 
     postElement.querySelector(`.picture__img`).setAttribute(`src`, post.url);
     postElement.querySelector(`.picture__likes`).textContent = post.likes;
-    postElement.querySelector(`.picture__comments`).textContent = post.comments;
+    postElement.querySelector(`.picture__comments`).textContent = post.comments.length;
 
     return postElement;
   };
 
-  const successHandler = function () {
+  window.successHandler = function (data) {
     const picturesListElement = document.querySelector(`.pictures`);
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < getPosts().length; i++) {
-      fragment.appendChild(renderPost(getPosts()[i]));
+    const filtresForm = document.querySelector('.img-filters__form');
+    const filtresButtons = document.querySelectorAll('.img-filters__button');
+    const filterDefault = document.querySelector('#filter-default');
+    const filterRandom = document.querySelector('#filter-random');
+    const filterDiscussed = document.querySelector('#filter-discussed');
+
+    const loadPosts = data.slice();
+
+    const deletesPosts = function () {
+      const post = document.querySelectorAll(`.picture`);
+      for (let i = 0; i < post.length; i++) {
+        post[i].remove();
+      }
+    };
+
+    const renderDefaultPosts = function () {
+      deletesPosts();
+
+      for (let i = 0; i < loadPosts.length; i++) {
+        fragment.appendChild(renderPost(loadPosts[i]));
+      }
+      picturesListElement.appendChild(fragment);
+    };
+
+    const renderRandomPosts = function () {
+      deletesPosts();
+
+      const randomPosts = data.sort(function () {
+        return 0.5 - Math.random();
+      });
+
+      for (let i = 0; i < MAX_RANDOM_POSTS; i++) {
+        fragment.appendChild(renderPost(randomPosts[i]));
+      }
+      picturesListElement.appendChild(fragment);
+    };
+
+    const discussedChange = function () {
+      deletesPosts();
+
+      data.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
+
+      for (let i = 0; i < data.length; i++) {
+        fragment.appendChild(renderPost(data[i]));
+      }
+      picturesListElement.appendChild(fragment);
+    };
+
+    for (let i = 0; i < data.length; i++) {
+      fragment.appendChild(renderPost(data[i]));
     }
     picturesListElement.appendChild(fragment);
+
+    filtresForm.addEventListener('click', function (evt) {
+      if (evt.target.matches(`button[type="button"]`)) {
+        for (let i = 0; i < filtresButtons.length; i++) {
+          filtresButtons[i].classList.remove('img-filters__button--active');
+        }
+        evt.target.classList.add('img-filters__button--active');
+      }
+      if (filterDefault.classList.contains(`img-filters__button--active`)) {
+        window.debounce(function () {
+          renderDefaultPosts();
+        });
+      } else if (filterRandom.classList.contains(`img-filters__button--active`)) {
+        window.debounce(function () {
+          renderRandomPosts();
+        });
+      } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
+        window.debounce(function () {
+          discussedChange();
+        });
+      }
+    });
   };
 
-  const errorHandler = function (errorMessage) {
+  window.errorHandler = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -111,8 +110,6 @@
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
   };
-
-  window.load(successHandler, errorHandler);
 
   uploadFileInput.addEventListener(`change`, function () {
     window.popup.open();
