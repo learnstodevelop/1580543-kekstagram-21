@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  const imgFiltres = document.querySelector('.img-filters');
 
   const URL = `https://21.javascript.pages.academy/kekstagram/data`;
 
@@ -19,7 +18,6 @@
     xhr.addEventListener(`load`, function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
-        imgFiltres.classList.remove('img-filters--inactive');
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -38,5 +36,4 @@
     xhr.open('GET', URL);
     xhr.send();
   };
-
 })();
