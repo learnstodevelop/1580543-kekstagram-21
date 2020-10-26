@@ -18,9 +18,6 @@
       if (evt.target && evt.target.matches(`input[id="effect-none"]`)) {
         imgPreview.className = ``;
         effectSlider.classList.add(`hidden`);
-      } else if (evt.target && evt.target.matches(`input[id="effect-none"]`)) {
-        imgPreview.className = ``;
-        effectSlider.classList.add(`hidden`);
       } else if (evt.target && evt.target.matches(`input[id="effect-chrome"]`)) {
         imgPreview.className = `effects__preview--chrome`;
         effectSlider.classList.remove(`hidden`);
