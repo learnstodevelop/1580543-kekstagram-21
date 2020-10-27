@@ -3,8 +3,23 @@
 (function () {
   const MAX_RANDOM_POSTS = 10;
 
+  const filtresForm = document.querySelector('.img-filters__form');
+  const filtresButtons = document.querySelectorAll('.img-filters__button');
+  const filterDefault = document.querySelector('#filter-default');
+  const filterRandom = document.querySelector('#filter-random');
+  const filterDiscussed = document.querySelector('#filter-discussed');
+  const imgFiltres = document.querySelector('.img-filters');
+  const picturesListElement = document.querySelector(`.pictures`);
+
   const uploadFileInput = document.querySelector(`#upload-file`);
   const uploadFileControl = document.querySelector(`.img-upload__control`);
+
+  const deletePosts = function () {
+    const post = document.querySelectorAll(`.picture`);
+    for (let i = 0; i < post.length; i++) {
+      post[i].remove();
+    }
+  };
 
   const renderPost = function (post) {
     const pictureTemplate = document.querySelector(`#picture`)
@@ -21,23 +36,9 @@
   };
 
   window.successHandler = function (arr) {
-    const picturesListElement = document.querySelector(`.pictures`);
     const fragment = document.createDocumentFragment();
-    const filtresForm = document.querySelector('.img-filters__form');
-    const filtresButtons = document.querySelectorAll('.img-filters__button');
-    const filterDefault = document.querySelector('#filter-default');
-    const filterRandom = document.querySelector('#filter-random');
-    const filterDiscussed = document.querySelector('#filter-discussed');
-    const imgFiltres = document.querySelector('.img-filters');
 
     const loadedPosts = arr.slice();
-
-    const deletePosts = function () {
-      const post = document.querySelectorAll(`.picture`);
-      for (let i = 0; i < post.length; i++) {
-        post[i].remove();
-      }
-    };
 
     const renderDefaultPosts = function () {
       deletePosts();
