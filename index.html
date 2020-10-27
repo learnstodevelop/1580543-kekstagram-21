@@ -30,12 +30,12 @@
       <section class="img-upload">
         <div class="img-upload__wrapper">
           <h2 class="img-upload__title  visually-hidden">Загрузка фотографии</h2>
-          <form class="img-upload__form" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off">
+          <form class="img-upload__form" id="upload-select-image" method="post" action="https://21.javascript.pages.academy/kekstagram" enctype="multipart/form-data" autocomplete="off">
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
-              <input type="file" id="upload-file" class="img-upload__input  visually-hidden" name="filename" required>
-              <label for="upload-file" class="img-upload__label  img-upload__control">Загрузить</label>
+              <input type="file" id="upload-file" class="img-upload__input  hidden" name="filename" required>
+              <label for="upload-file" class="img-upload__label  img-upload__control" tabindex="0">Загрузить</label>
             </fieldset>
 
             <!-- Форма редактирования изображения -->
@@ -46,18 +46,18 @@
                   <!-- Изменение размера изображения -->
                   <fieldset class="img-upload__scale  scale">
                     <button type="button" class="scale__control  scale__control--smaller">Уменьшить</button>
-                    <input type="text" class="scale__control  scale__control--value" value="55%" title="Image Scale" name="scale" readonly>
+                    <input type="text" class="scale__control  scale__control--value" value="100%" title="Image Scale" name="scale" readonly>
                     <button type="button" class="scale__control  scale__control--bigger">Увеличить</button>
                   </fieldset>
 
                   <!-- Предварительный просмотр изображения -->
                   <div class="img-upload__preview">
-                    <img src="img/upload-default-image.jpg" alt="Предварительный просмотр фотографии">
+                    <img class="img-upload__img" src="img/upload-default-image.jpg" alt="Предварительный просмотр фотографии">
                   </div>
 
                   <!-- Изменение глубины эффекта, накладываемого на изображение -->
                   <fieldset class="img-upload__effect-level  effect-level">
-                    <input class="effect-level__value" type="number" name="effect-level" value="20">
+                    <input class="effect-level__value" type="number" name="effect-level" value="100">
                     <div class="effect-level__line">
                       <div class="effect-level__pin" tabindex="0">Кнопка изменения глубины эффекта фотографии</div>
                       <div class="effect-level__depth">Глубина эффекта фотографии</div>
@@ -233,6 +233,27 @@
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
 
+  <!-- Шаблон комментариев в полноэкранном режиме -->
+  <template id="comment">
+    <li class="social__comment">
+      <img
+          class="social__picture"
+          src="{{аватар}}"
+          alt="{{имя комментатора}}"
+          width="35" height="35">
+      <p class="social__text">{{текст комментария}}</p>
+    </li>
+  </template>
+
+  <script src="js/preview-editor.js"></script>
+  <script src="js/validate-hashtags.js"></script>
+  <script src="js/popup.js"></script>
+  <script src="js/debounce.js"></script>
+  <script src="js/load.js"></script>
+  <script src="js/upload.js"></script>
+  <script src="js/posts.js"></script>
+  <script src="js/view-post.js"></script>
   <script src="js/main.js"></script>
+
 </body>
 </html>
