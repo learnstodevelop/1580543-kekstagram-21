@@ -30,7 +30,7 @@
     const filterDiscussed = document.querySelector('#filter-discussed');
     const imgFiltres = document.querySelector('.img-filters');
 
-    const loadPosts = data.slice();
+    const loadedPosts = data.slice();
 
     const deletePosts = function () {
       const post = document.querySelectorAll(`.picture`);
@@ -42,8 +42,8 @@
     const renderDefaultPosts = function () {
       deletePosts();
 
-      for (let i = 0; i < loadPosts.length; i++) {
-        fragment.appendChild(renderPost(loadPosts[i]));
+      for (let i = 0; i < loadedPosts.length; i++) {
+        fragment.appendChild(renderPost(loadedPosts[i]));
       }
       picturesListElement.appendChild(fragment);
     };
