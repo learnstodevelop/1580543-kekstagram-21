@@ -1,5 +1,9 @@
 'use strict';
 
 (function () {
-  window.load(window.successHandler, window.errorHandler);
+  const init = function (data) {
+    window.showBigPicture(data);
+    window.successHandler(data);
+  };
+  window.load(init, window.errorHandler);
 })();

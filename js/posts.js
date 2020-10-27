@@ -20,7 +20,7 @@
     return postElement;
   };
 
-  window.successHandler = function (data) {
+  window.successHandler = function (arr) {
     const picturesListElement = document.querySelector(`.pictures`);
     const fragment = document.createDocumentFragment();
     const filtresForm = document.querySelector('.img-filters__form');
@@ -28,10 +28,11 @@
     const filterDefault = document.querySelector('#filter-default');
     const filterRandom = document.querySelector('#filter-random');
     const filterDiscussed = document.querySelector('#filter-discussed');
+    const imgFiltres = document.querySelector('.img-filters');
 
-    const loadPosts = data.slice();
+    const loadedPosts = arr.slice();
 
-    const deletesPosts = function () {
+    const deletePosts = function () {
       const post = document.querySelectorAll(`.picture`);
       for (let i = 0; i < post.length; i++) {
         post[i].remove();
@@ -39,18 +40,18 @@
     };
 
     const renderDefaultPosts = function () {
-      deletesPosts();
+      deletePosts();
 
-      for (let i = 0; i < loadPosts.length; i++) {
-        fragment.appendChild(renderPost(loadPosts[i]));
+      for (let i = 0; i < loadedPosts.length; i++) {
+        fragment.appendChild(renderPost(loadedPosts[i]));
       }
       picturesListElement.appendChild(fragment);
     };
 
     const renderRandomPosts = function () {
-      deletesPosts();
+      deletePosts();
 
-      const randomPosts = data.sort(function () {
+      const randomPosts = arr.sort(function () {
         return 0.5 - Math.random();
       });
 
@@ -61,18 +62,20 @@
     };
 
     const discussedChange = function () {
-      deletesPosts();
+      deletePosts();
 
-      data.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
+      arr.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
 
-      for (let i = 0; i < data.length; i++) {
-        fragment.appendChild(renderPost(data[i]));
+      for (let i = 0; i < arr.length; i++) {
+        fragment.appendChild(renderPost(arr[i]));
       }
       picturesListElement.appendChild(fragment);
     };
 
-    for (let i = 0; i < data.length; i++) {
-      fragment.appendChild(renderPost(data[i]));
+    imgFiltres.classList.remove('img-filters--inactive');
+
+    for (let i = 0; i < arr.length; i++) {
+      fragment.appendChild(renderPost(arr[i]));
     }
     picturesListElement.appendChild(fragment);
 
