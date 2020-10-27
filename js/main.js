@@ -7,6 +7,6 @@
       window.successHandler(data);
     };
     window.load(init, window.errorHandler);
-  }
+  };
   start();
 })();
