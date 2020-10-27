@@ -2,7 +2,7 @@
 
 (function () {
 
-  const renderInnerPost = function (data) {
+  window.showBigPicture = function (pictures) {
     const bigPicture = document.querySelector('.big-picture');
     const bigPictureImg = bigPicture.querySelector('img');
     const likesCount = bigPicture.querySelector('.likes-count');
@@ -12,6 +12,8 @@
     const socialCapton = bigPicture.querySelector('.social__caption');
     const commentsLoader = bigPicture.querySelector('.comments-loader');
     const body = document.querySelector(`body`);
+
+    const fragment = document.createDocumentFragment();
 
     const deleteComments = function () {
       const comments = document.querySelectorAll(`.social__comment`);
@@ -27,30 +29,28 @@
     commentsLoader.classList.add('hidden');
     body.classList.add('modal-open');
 
-    bigPictureImg.src = data[0].url;
-    likesCount.textContent = data[0].likes;
-    commentsCount.textContent = data[0].comments.length;
-    socialCapton.textContent = data[0].description;
+    bigPictureImg.src = pictures[0].url;
+    likesCount.textContent = pictures[0].likes;
+    commentsCount.textContent = pictures[0].comments.length;
+    socialCapton.textContent = pictures[0].description;
 
-    for (let i = 0; i < data[0].comments.length; i++) {
-      const socialComment = document.createElement('li');
-      const socialCommentAvatar = document.createElement('img');
-      const socialCommentText = document.createElement('p');
+    const renderComment = function (comment) {
+      const commentTemplate = document.querySelector(`#comment`)
+        .content
+        .querySelector(`.social__comment`);
 
-      socialComment.className = 'social__comment';
+      const commentElement = commentTemplate.cloneNode(true);
 
-      socialCommentAvatar.className = 'social__picture';
-      socialCommentAvatar.src = data[0].comments[i].avatar;
-      socialCommentAvatar.alt = data[0].comments[i].name;
-      socialCommentAvatar.width = '35';
-      socialCommentAvatar.height = '35';
+      commentElement.querySelector('img').src = comment.avatar;
+      commentElement.querySelector('img').alt = comment.name;
+      commentElement.querySelector('.social__text').textContent = comment.message;
 
-      socialCommentText.textContent = data[0].comments[i].message;
+      return commentElement;
+    };
 
-      socialComment.append(socialCommentAvatar);
-      socialComment.append(socialCommentText);
-      socialComments.append(socialComment);
+    for (let i = 0; i < pictures[0].comments.length; i++) {
+      fragment.appendChild(renderComment(pictures[0].comments[i]));
     }
+    socialComments.appendChild(fragment);
   };
-  window.load(renderInnerPost, window.onError);
 })();

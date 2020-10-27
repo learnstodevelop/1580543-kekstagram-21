@@ -3,6 +3,9 @@
 (function () {
   const MAX_RANDOM_POSTS = 10;
 
+  const uploadFileInput = document.querySelector(`#upload-file`);
+  const uploadFileControl = document.querySelector(`.img-upload__control`);
+
   const renderPost = function (post) {
     const pictureTemplate = document.querySelector(`#picture`)
       .content
@@ -17,7 +20,7 @@
     return postElement;
   };
 
-  window.successHandler = function (data) {
+  window.successHandler = function (arr) {
     const picturesListElement = document.querySelector(`.pictures`);
     const fragment = document.createDocumentFragment();
     const filtresForm = document.querySelector('.img-filters__form');
@@ -27,7 +30,7 @@
     const filterDiscussed = document.querySelector('#filter-discussed');
     const imgFiltres = document.querySelector('.img-filters');
 
-    const loadedPosts = data.slice();
+    const loadedPosts = arr.slice();
 
     const deletePosts = function () {
       const post = document.querySelectorAll(`.picture`);
@@ -48,7 +51,7 @@
     const renderRandomPosts = function () {
       deletePosts();
 
-      const randomPosts = data.sort(function () {
+      const randomPosts = arr.sort(function () {
         return 0.5 - Math.random();
       });
 
@@ -61,18 +64,18 @@
     const discussedChange = function () {
       deletePosts();
 
-      data.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
+      arr.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
 
-      for (let i = 0; i < data.length; i++) {
-        fragment.appendChild(renderPost(data[i]));
+      for (let i = 0; i < arr.length; i++) {
+        fragment.appendChild(renderPost(arr[i]));
       }
       picturesListElement.appendChild(fragment);
     };
 
     imgFiltres.classList.remove('img-filters--inactive');
 
-    for (let i = 0; i < data.length; i++) {
-      fragment.appendChild(renderPost(data[i]));
+    for (let i = 0; i < arr.length; i++) {
+      fragment.appendChild(renderPost(arr[i]));
     }
     picturesListElement.appendChild(fragment);
 
@@ -110,6 +113,16 @@
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
   };
+
+  uploadFileInput.addEventListener(`change`, function () {
+    window.popup.open();
+  });
+
+  uploadFileControl.addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Enter`) {
+      uploadFileControl.click();
+    }
+  });
 })();
 
 
