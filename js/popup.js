@@ -15,6 +15,8 @@
   const hashtagsInput = document.querySelector(`.text__hashtags`);
   const effectList = document.querySelector(`.effects__list`);
   const effectSlider = document.querySelector(`.img-upload__effect-level`);
+  const commentInput = document.querySelector(`.text__description`);
+
 
   window.popup = {
     open: function () {
@@ -43,6 +45,14 @@
       });
 
       hashtagsInput.addEventListener(`blur`, function () {
+        document.addEventListener(`keydown`, window.popup.onPopupEscPress);
+      });
+
+      commentInput.addEventListener(`focus`, function () {
+        document.removeEventListener(`keydown`, window.popup.onPopupEscPress);
+      });
+
+      commentInput.addEventListener(`blur`, function () {
         document.addEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 
@@ -84,6 +94,14 @@
       });
 
       hashtagsInput.removeEventListener(`blur`, function () {
+        document.addEventListener(`keydown`, window.popup.onPopupEscPress);
+      });
+
+      commentInput.removeEventListener(`focus`, function () {
+        document.removeEventListener(`keydown`, window.popup.onPopupEscPress);
+      });
+
+      commentInput.removeEventListener(`blur`, function () {
         document.addEventListener(`keydown`, window.popup.onPopupEscPress);
       });
 

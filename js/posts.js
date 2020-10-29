@@ -37,14 +37,23 @@
 
   window.successHandler = function (arr) {
     const fragment = document.createDocumentFragment();
+    imgFiltres.classList.remove('img-filters--inactive');
 
-    const loadedPosts = arr.slice();
+    const loadedPosts = [];
+    for (let i = 0; i < arr.length; i++) {
+      loadedPosts.push(arr[i]);
+    }
 
-    const renderDefaultPosts = function () {
+    for (let i = 0; i < loadedPosts.length; i++) {
+      fragment.appendChild(renderPost(loadedPosts[i]));
+    }
+    picturesListElement.appendChild(fragment);
+
+    const renderDefaultPosts = function (defaultArr) {
       deletePosts();
 
-      for (let i = 0; i < loadedPosts.length; i++) {
-        fragment.appendChild(renderPost(loadedPosts[i]));
+      for (let i = 0; i < defaultArr.length; i++) {
+        fragment.appendChild(renderPost(defaultArr[i]));
       }
       picturesListElement.appendChild(fragment);
     };
@@ -52,7 +61,7 @@
     const renderRandomPosts = function () {
       deletePosts();
 
-      const randomPosts = arr.sort(function () {
+      const randomPosts = loadedPosts.sort(function () {
         return 0.5 - Math.random();
       });
 
@@ -65,20 +74,13 @@
     const discussedChange = function () {
       deletePosts();
 
-      arr.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
+      loadedPosts.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
 
-      for (let i = 0; i < arr.length; i++) {
-        fragment.appendChild(renderPost(arr[i]));
+      for (let i = 0; i < loadedPosts.length; i++) {
+        fragment.appendChild(renderPost(loadedPosts[i]));
       }
       picturesListElement.appendChild(fragment);
     };
-
-    imgFiltres.classList.remove('img-filters--inactive');
-
-    for (let i = 0; i < arr.length; i++) {
-      fragment.appendChild(renderPost(arr[i]));
-    }
-    picturesListElement.appendChild(fragment);
 
     filtresForm.addEventListener('click', function (evt) {
       if (evt.target.matches(`button[type="button"]`)) {
@@ -86,19 +88,22 @@
           filtresButtons[i].classList.remove('img-filters__button--active');
         }
         evt.target.classList.add('img-filters__button--active');
-      }
-      if (filterDefault.classList.contains(`img-filters__button--active`)) {
-        window.debounce(function () {
-          renderDefaultPosts();
-        });
-      } else if (filterRandom.classList.contains(`img-filters__button--active`)) {
-        window.debounce(function () {
-          renderRandomPosts();
-        });
-      } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
-        window.debounce(function () {
-          discussedChange();
-        });
+        if (filterDefault.classList.contains(`img-filters__button--active`)) {
+          window.debounce(function () {
+            renderDefaultPosts(arr);
+            window.showBigPicture(arr);
+          });
+        } else if (filterRandom.classList.contains(`img-filters__button--active`)) {
+          window.debounce(function () {
+            renderRandomPosts();
+            window.showBigPicture(loadedPosts);
+          });
+        } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
+          window.debounce(function () {
+            discussedChange();
+            window.showBigPicture(loadedPosts);
+          });
+        }
       }
     });
   };
