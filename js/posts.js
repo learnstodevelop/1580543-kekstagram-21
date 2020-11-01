@@ -1,16 +1,6 @@
 'use strict';
 
 (function () {
-  const MAX_RANDOM_POSTS = 10;
-
-  const filtresForm = document.querySelector('.img-filters__form');
-  const filtresButtons = document.querySelectorAll('.img-filters__button');
-  const filterDefault = document.querySelector('#filter-default');
-  const filterRandom = document.querySelector('#filter-random');
-  const filterDiscussed = document.querySelector('#filter-discussed');
-  const imgFiltres = document.querySelector('.img-filters');
-  const picturesListElement = document.querySelector(`.pictures`);
-
   const uploadFileInput = document.querySelector(`#upload-file`);
   const uploadFileControl = document.querySelector(`.img-upload__control`);
 
@@ -35,8 +25,17 @@
     return postElement;
   };
 
-  window.successHandler = function (arr) {
+  window.showListPosts = function (arr) {
+    const filtresForm = document.querySelector('.img-filters__form');
+    const filtresButtons = document.querySelectorAll('.img-filters__button');
+    const filterDefault = document.querySelector('#filter-default');
+    const filterRandom = document.querySelector('#filter-random');
+    const filterDiscussed = document.querySelector('#filter-discussed');
+    const imgFiltres = document.querySelector('.img-filters');
+    const picturesListElement = document.querySelector(`.pictures`);
+
     const fragment = document.createDocumentFragment();
+
     imgFiltres.classList.remove('img-filters--inactive');
 
     const loadedPosts = [];
@@ -59,6 +58,8 @@
     };
 
     const renderRandomPosts = function () {
+      const MAX_RANDOM_POSTS = 10;
+
       deletePosts();
 
       const randomPosts = loadedPosts.sort(function () {
@@ -91,17 +92,17 @@
         if (filterDefault.classList.contains(`img-filters__button--active`)) {
           window.debounce(function () {
             renderDefaultPosts(arr);
-            window.showBigPicture(arr);
+            window.bigPicture.assignHandlers(arr);
           });
         } else if (filterRandom.classList.contains(`img-filters__button--active`)) {
           window.debounce(function () {
             renderRandomPosts();
-            window.showBigPicture(loadedPosts);
+            window.bigPicture.assignHandlers(loadedPosts);
           });
         } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
           window.debounce(function () {
             discussedChange();
-            window.showBigPicture(loadedPosts);
+            window.bigPicture.assignHandlers(loadedPosts);
           });
         }
       }

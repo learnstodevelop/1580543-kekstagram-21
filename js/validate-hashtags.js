@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
-  const hashtagsInput = document.querySelector(`.text__hashtags`);
 
   window.validateHashtags = function () {
+    const hashtagsInput = document.querySelector(`.text__hashtags`);
     const MAX_HASHTAGS = 5;
     const MAX_HASHTAG_LENGTH = 20;
     const hashtagsArr = hashtagsInput.value.split(` `);

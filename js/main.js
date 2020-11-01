@@ -2,11 +2,11 @@
 
 (function () {
   const start = function () {
-    const init = function (data) {
-      window.successHandler(data);
-      window.showBigPicture(data);
+    const succesHandler = function (data) {
+      window.showListPosts(data);
+      window.bigPicture.assignHandlers(data);
     };
-    window.load(init, window.errorHandler);
+    window.load(succesHandler, window.errorHandler);
   };
 
   start();
