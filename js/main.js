@@ -1,9 +1,13 @@
 'use strict';
 
 (function () {
-  const init = function (data) {
-    window.showBigPicture(data);
-    window.successHandler(data);
+  const start = function () {
+    const succesHandler = function (data) {
+      window.showListPosts(data);
+      window.bigPicture.assignHandlers(data);
+    };
+    window.load(succesHandler, window.errorHandler);
   };
-  window.load(init, window.errorHandler);
+
+  start();
 })();

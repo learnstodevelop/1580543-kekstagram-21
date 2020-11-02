@@ -1,17 +1,17 @@
 'use strict';
 
 (function () {
-  const DEFAULT_LEVEL = 100;
   const SCALE_VALUE_STEP = 25;
   const SCALE_VALUE_MAX = 100;
   const SCALE_VALUE_MIN = 0;
+  const DEFAULT_LEVEL = 100;
 
-  const scaleValue = document.querySelector(`.scale__control--value`);
   const imgPreview = document.querySelector(`.img-upload__img`);
-  const scaleValueNumber = scaleValue.value.split(`%`);
+  const effectSlider = document.querySelector(`.img-upload__effect-level`);
   const effectInputValue = document.querySelector(`.effect-level__value`);
   const effectList = document.querySelector(`.effects__list`);
-  const effectSlider = document.querySelector(`.img-upload__effect-level`);
+  const scaleValue = document.querySelector(`.scale__control--value`);
+  const scaleValueNumber = scaleValue.value.split(`%`);
 
   window.previewEditor = {
     filterChangeHandler: function (evt) {
@@ -38,7 +38,6 @@
     effectDefaultHandler: function (evt) {
       if (evt.target && evt.target.matches(`input[name="effect"]`)) {
         effectInputValue.setAttribute(`value`, DEFAULT_LEVEL);
-
         if (effectList.querySelector(`input[id="effect-none"]`).checked) {
           imgPreview.style.filter = `none`;
         } else if (effectList.querySelector(`input[id="effect-chrome"]`).checked) {
