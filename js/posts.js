@@ -25,6 +25,50 @@
     return postElement;
   };
 
+  const setDataAttribute = function () {
+    const postElement = document.querySelectorAll('.picture__img');
+    for (let i = 0; i < postElement.length; i++) {
+      postElement[i].setAttribute('data-index', i);
+    }
+  };
+
+  const addToFragment = function (arr) {
+    const picturesListElement = document.querySelector(`.pictures`);
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < arr.length; i++) {
+      fragment.appendChild(renderPost(arr[i]));
+    }
+    picturesListElement.appendChild(fragment);
+    return picturesListElement;
+  };
+
+  const renderDefaultPosts = function (defaultArr) {
+    deletePosts();
+    addToFragment(defaultArr);
+    setDataAttribute();
+  };
+
+  const renderRandomPosts = function (arr) {
+    const MAX_RANDOM_POSTS = 10;
+    deletePosts();
+    const randomPosts = arr.sort(function () {
+      return 0.5 - Math.random();
+    });
+    addToFragment(randomPosts);
+    const post = document.querySelectorAll(`.picture`);
+    for (let i = MAX_RANDOM_POSTS; i < post.length; i++) {
+      post[i].classList.add('hidden');
+    }
+    setDataAttribute();
+  };
+
+  const discussedChange = function (arr) {
+    deletePosts();
+    arr.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
+    addToFragment(arr);
+    setDataAttribute();
+  };
+
   window.showListPosts = function (arr) {
     const filtresForm = document.querySelector('.img-filters__form');
     const filtresButtons = document.querySelectorAll('.img-filters__button');
@@ -32,9 +76,6 @@
     const filterRandom = document.querySelector('#filter-random');
     const filterDiscussed = document.querySelector('#filter-discussed');
     const imgFiltres = document.querySelector('.img-filters');
-    const picturesListElement = document.querySelector(`.pictures`);
-
-    const fragment = document.createDocumentFragment();
 
     imgFiltres.classList.remove('img-filters--inactive');
 
@@ -43,68 +84,35 @@
       loadedPosts.push(arr[i]);
     }
 
-    for (let i = 0; i < loadedPosts.length; i++) {
-      fragment.appendChild(renderPost(loadedPosts[i]));
-    }
-    picturesListElement.appendChild(fragment);
-
-    const renderDefaultPosts = function (defaultArr) {
-      deletePosts();
-
-      for (let i = 0; i < defaultArr.length; i++) {
-        fragment.appendChild(renderPost(defaultArr[i]));
-      }
-      picturesListElement.appendChild(fragment);
-    };
-
-    const renderRandomPosts = function () {
-      const MAX_RANDOM_POSTS = 10;
-
-      deletePosts();
-
-      const randomPosts = loadedPosts.sort(function () {
-        return 0.5 - Math.random();
-      });
-
-      for (let i = 0; i < MAX_RANDOM_POSTS; i++) {
-        fragment.appendChild(renderPost(randomPosts[i]));
-      }
-      picturesListElement.appendChild(fragment);
-    };
-
-    const discussedChange = function () {
-      deletePosts();
-
-      loadedPosts.sort((obj1, obj2) => obj2.comments.length - obj1.comments.length);
-
-      for (let i = 0; i < loadedPosts.length; i++) {
-        fragment.appendChild(renderPost(loadedPosts[i]));
-      }
-      picturesListElement.appendChild(fragment);
-    };
+    addToFragment(loadedPosts);
+    setDataAttribute();
+    window.bigPicture.openHiddenComments();
 
     filtresForm.addEventListener('click', function (evt) {
-      if (evt.target.matches(`button[type="button"]`)) {
+      if (evt.target && evt.target.matches(`button[type="button"]`)) {
         for (let i = 0; i < filtresButtons.length; i++) {
           filtresButtons[i].classList.remove('img-filters__button--active');
         }
         evt.target.classList.add('img-filters__button--active');
-        if (filterDefault.classList.contains(`img-filters__button--active`)) {
-          window.debounce(function () {
-            renderDefaultPosts(arr);
-            window.bigPicture.assignHandlers(arr);
-          });
-        } else if (filterRandom.classList.contains(`img-filters__button--active`)) {
-          window.debounce(function () {
-            renderRandomPosts();
-            window.bigPicture.assignHandlers(loadedPosts);
-          });
-        } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
-          window.debounce(function () {
-            discussedChange();
-            window.bigPicture.assignHandlers(loadedPosts);
-          });
-        }
+      }
+      if (filterDefault.classList.contains(`img-filters__button--active`)) {
+        window.debounce(function () {
+          renderDefaultPosts(arr);
+          window.bigPicture.assignHandlers(arr);
+
+        });
+      } else if (filterRandom.classList.contains(`img-filters__button--active`)) {
+        window.debounce(function () {
+          renderRandomPosts(loadedPosts);
+          window.bigPicture.assignHandlers(loadedPosts);
+
+        });
+      } else if (filterDiscussed.classList.contains(`img-filters__button--active`)) {
+        window.debounce(function () {
+          discussedChange(loadedPosts);
+          window.bigPicture.assignHandlers(loadedPosts);
+
+        });
       }
     });
   };

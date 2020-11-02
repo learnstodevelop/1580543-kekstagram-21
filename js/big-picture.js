@@ -38,37 +38,23 @@
       closeBigPicture.removeEventListener('click', window.bigPicture.close);
 
       document.removeEventListener(`keydown`, window.bigPicture.onKeyDown);
-
     },
-    onKeyDown: function (evt) {
-      const bigPicture = document.querySelector('.big-picture');
-      const commentsLoader = document.querySelector('.comments-loader');
-      const body = document.querySelector(`body`);
-      const closeBigPicture = document.querySelector('.big-picture__cancel');
-      const inputComment = document.querySelector('.social__footer-text');
 
+    onKeyDown: function (evt) {
       if (evt.key === `Escape`) {
         evt.preventDefault();
-        bigPicture.classList.add('hidden');
-        commentsLoader.classList.remove('hidden');
-        body.classList.remove('modal-open');
-        inputComment.value = '';
-
-        closeBigPicture.removeEventListener('click', window.bigPicture.close);
-
-        document.removeEventListener(`keydown`, window.bigPicture.onKeyDown);
+        window.bigPicture.close();
       }
     },
+
     assignHandlers: function (data) {
       const picturesListElement = document.querySelector(`.pictures`);
       const closeBigPicture = document.querySelector('.big-picture__cancel');
 
       picturesListElement.addEventListener('click', function (evt) {
         if (evt.target && evt.target.matches('img[class="picture__img"]')) {
-          const icons = document.querySelectorAll('.picture__img');
-          const iconArr = Array.from(icons);
-
-          window.bigPicture.renderBigPicture(data, iconArr.indexOf(evt.target));
+          let dataAttribute = evt.target.getAttribute('data-index');
+          window.bigPicture.renderBigPicture(data[dataAttribute]);
 
           closeBigPicture.addEventListener('click', window.bigPicture.close);
           document.addEventListener(`keydown`, window.bigPicture.onKeyDown);
@@ -79,10 +65,8 @@
         if (evt.target && evt.target.matches('a[class="picture"]')) {
           if (evt.key === `Enter`) {
             evt.preventDefault();
-            const links = document.querySelectorAll('.picture');
-            const linkArr = Array.from(links);
-
-            window.bigPicture.renderBigPicture(data, linkArr.indexOf(evt.target));
+            let dataAttribute = evt.target.querySelector('.picture__img').getAttribute('data-index');
+            window.bigPicture.renderBigPicture(data[dataAttribute]);
 
             closeBigPicture.addEventListener('click', window.bigPicture.close);
             document.addEventListener(`keydown`, window.bigPicture.onKeyDown);
@@ -90,7 +74,8 @@
         }
       });
     },
-    renderBigPicture: function (pictures, index) {
+
+    renderBigPicture: function (element) {
       const bigPicture = document.querySelector('.big-picture');
       const bigPictureImg = bigPicture.querySelector('img');
       const likesCount = document.querySelector('.likes-count');
@@ -108,13 +93,13 @@
       socialCommentCount.classList.add('hidden');
       body.classList.add('modal-open');
 
-      bigPictureImg.src = pictures[index].url;
-      likesCount.textContent = pictures[index].likes;
-      commentsCount.textContent = pictures[index].comments.length;
-      socialCapton.textContent = pictures[index].description;
+      bigPictureImg.src = element.url;
+      likesCount.textContent = element.likes;
+      commentsCount.textContent = element.comments.length;
+      socialCapton.textContent = element.description;
 
-      for (let i = 0; i < pictures[index].comments.length; i++) {
-        fragment.appendChild(renderComment(pictures[index].comments[i]));
+      for (let i = 0; i < element.comments.length; i++) {
+        fragment.appendChild(renderComment(element.comments[i]));
       }
       socialComments.appendChild(fragment);
 
@@ -123,6 +108,7 @@
         comments[i].classList.add('hidden');
       }
     },
+
     openHiddenComments: function () {
       const commentsLoader = document.querySelector('.comments-loader');
       const socialComments = document.querySelector('.social__comments');
@@ -141,6 +127,4 @@
       });
     }
   };
-
-  window.bigPicture.openHiddenComments();
 })();
